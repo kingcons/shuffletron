@@ -1,4 +1,4 @@
-(asdf:defsystem :shuffletron 
+(asdf:defsystem :shuffletron
   :name "Shuffletron"
   :description "An MP3 player"
   :version "0.0.5"
@@ -18,5 +18,6 @@
                              (:file "audio")
                              (:file "ui")
                              (:file "alarms")
+                             (:file "playlists")
                              (:file "main")
                              (:file "status-bar")))))

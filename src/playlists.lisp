@@ -1,0 +1,42 @@
+(in-package :shuffletron)
+
+(defvar *playlists* nil)
+
+(defun save-playlists ()
+  (setf (pref "playlists") *playlists*)
+  (values))
+
+(defun load-playlists ()
+  (loop for (name playlist) in (pref "playlists" '())
+     do (set-playlist name playlist)))
+
+(defun get-playlist (name)
+  (cadr (assoc name *playlists* :test #'equal)))
+
+(defun set-playlist (name songs)
+  (let ((exists-p (get-playlist name)))
+    (if exists-p
+        (setf (cadr (assoc name *playlists* :test #'equal)) songs)
+        (acons name songs *playlists*))))
+
+(defun playlist-to-m3u (playlist &key (name playlist))
+  "Export a playlist to m3u with the given name in ~/.shuffletron/playlists/.
+If there is an existing file with the same name, it will be overwritten."
+  (let ((path (prefpath (format nil "~a.m3u" name))))
+    (with-open-file (out path :direction :output :if-exists :supersede)
+      (loop for song across (get-playlist playlist)
+         do (format out "~a~%" (song-local-path song))))))
+
+(defun playlist-from-m3u (path name)
+  "Given a path and a name, create a playlist with the given name from the
+m3u at path. If a song cannot be found in the library, warn the user."
+  (let ((file (if (position #\/ path) path (prefpath path)))
+        (playlist (make-array 8 :fill-pointer 0 :adjustable t)))
+    (with-open-file (in file)
+      (loop for line = (read-line in nil) while line
+         do (unless (string= "" line)
+              (let ((result (query line)))
+                (if (zerop (length result))
+                    (format t "Warning - Couldn't find song: ~a~%" line)
+                    (vector-push-extend (aref (query line) 0) playlist))))))
+    (set-playlist name playlist)))

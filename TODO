@@ -1,9 +1,15 @@
 Features:
 * Playlists
+-- Finish writing it! I.e. UI, Help, Playqueue interaction.
+---- Note: I've been storing playlists as Vectors. Playqueue is a list. Convert representation?
+---- Switch to a hash table instead of assoc for *playlists*?
+---- Suggested commands: queue stash/unstash, queue load, queue save.
+---- Support M3U import/export separately or impicitly perform in load/save?
+-- M3U import/export should probably raise a condition if it can't find a song, etc.
+-- Is there a good way to rearrange song order in the playqueue at present?
 * Last.fm/Scrobbling Support
 
 Bugs:
 
 Other:
-* Docs update
 * Vorbis support?
