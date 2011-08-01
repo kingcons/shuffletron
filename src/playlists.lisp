@@ -14,10 +14,9 @@
   (cadr (assoc name *playlists* :test #'equal)))
 
 (defun set-playlist (name songs)
-  (let ((exists-p (get-playlist name)))
-    (if exists-p
-        (setf (cadr (assoc name *playlists* :test #'equal)) songs)
-        (acons name songs *playlists*))))
+  (if (get-playlist name)
+      (setf (cadr (assoc name *playlists* :test #'equal)) songs)
+      (setf *playlists* (acons name songs *playlists*))))
 
 (defun playlist-to-m3u (playlist &key (name playlist))
   "Export a playlist to m3u with the given name in ~/.shuffletron/playlists/.
@@ -27,7 +26,7 @@ If there is an existing file with the same name, it will be overwritten."
       (loop for song across (get-playlist playlist)
          do (format out "~a~%" (song-local-path song))))))
 
-(defun playlist-from-m3u (path name)
+(defun playlist-from-m3u (path &key (name (pathname-name path)))
   "Given a path and a name, create a playlist with the given name from the
 m3u at path. If a song cannot be found in the library, warn the user."
   (let ((file (if (position #\/ path) path (prefpath path)))
@@ -38,5 +37,5 @@ m3u at path. If a song cannot be found in the library, warn the user."
               (let ((result (query line)))
                 (if (zerop (length result))
                     (format t "Warning - Couldn't find song: ~a~%" line)
-                    (vector-push-extend (aref (query line) 0) playlist))))))
+                    (vector-push-extend (aref result 0) playlist))))))
     (set-playlist name playlist)))
