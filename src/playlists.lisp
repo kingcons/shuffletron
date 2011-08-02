@@ -11,14 +11,14 @@
      do (set-playlist name playlist)))
 
 (defun get-playlist (name)
-  (cadr (assoc name *playlists* :test #'equal)))
+  (cdr (assoc name *playlists* :test #'equal)))
 
 (defun list-playlists ()
   (loop for (name . songs) in *playlists* collecting name))
 
 (defun set-playlist (name songs)
   (if (get-playlist name)
-      (setf (cadr (assoc name *playlists* :test #'equal)) songs)
+      (setf (cdr (assoc name *playlists* :test #'equal)) songs)
       (setf *playlists* (acons name songs *playlists*))))
 
 (defun playlist-to-m3u (playlist &key (name playlist))

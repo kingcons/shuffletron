@@ -88,8 +88,8 @@ type \"scanid3\". It may take a moment.~%"
 (defun parse-and-execute (line)
  (let* ((sepidx (position #\Space line))
         (command (subseq line 0 sepidx))
-        (sepidx2 (position #\Space line :start (+ sepidx 1)))
-        (subcommand (subseq line (+ sepidx 1) sepidx2))
+        (sepidx2 (and sepidx (position #\Space line :start (+ sepidx 1))))
+        (subcommand (and sepidx (subseq line (+ sepidx 1) sepidx2)))
         (args (and sepidx (string-trim " " (subseq line sepidx)))))
   (cond
 
@@ -218,18 +218,19 @@ type \"scanid3\". It may take a moment.~%"
     ((and (string= command "queue")
           (equalp subcommand "save"))
      (with-playqueue ()
-       (set-playlist (subseq line sepidx2) (coerce *playqueue* 'vector))))
+       (set-playlist (subseq line (+ sepidx2 1))
+                     (coerce *playqueue* 'vector))))
 
     ;; Load a Playlist (or import from M3U)
     ((and (string= command "queue")
           (equalp subcommand "load"))
-     (let ((name (subseq line sepidx2)))
+     (let ((name (subseq line (+ sepidx2 1))))
        ;; TODO: Add probe-file/M3U import support.
        (cond ((get-playlist name)
               (with-playqueue ()
                 (setf *playqueue* (coerce (get-playlist name) 'list))))
              (t
-              (format t "Couldn't find playlist: ~a~%" name)))))
+              (format t "Couldn't find playlist: ~s~%" name)))))
 
     ;; Show available playlists
     ((string= line "queue names")
