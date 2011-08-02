@@ -229,7 +229,14 @@ type \"scanid3\". It may take a moment.~%"
               (with-playqueue ()
                 (setf *playqueue* (coerce (get-playlist name) 'list))))
              (t
-              (format t "Couldn't find the requested playlist!~%"))))))
+              (format t "Couldn't find playlist: ~a~%" name)))))
+
+    ;; Show available playlists
+    ((string= line "queue names")
+     (let ((playlists (list-playlists)))
+       (if playlists
+           (format t "Available playlists are: ~{~s~^,~}~%" playlists)
+           (format t "No playlists found. Add some!~%"))))
 
     ;; Show current song
     ((string= line "now") (show-current-song))

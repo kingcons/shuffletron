@@ -1,12 +1,12 @@
 Features:
 * Playlists
--- Finish writing it! I.e. UI, Help, Playqueue interaction.
----- Suggested commands: queue load, queue save. queue(s) list? or queue names? Build this into queue load somehow?
----- Support M3U import/export separately or impicitly perform in load/save?
------- I prefer implicitly. To do this, load should take a Playlist name *or* path.
------- But prefpath fails to return a namestring when given a name with a file extension! :-/
------- As for save, set-playlist could call playlist-to-m3u before existing on each invocation.
------- ...but then we ought to hash the file to prevent repeat saves/disk writes of unmodified copy.
+-- Suggested commands: queue show $name?
+---- Make get-playlist lookup case-insensitive? Insertion via set-playlist should correspond...
+-- Support M3U import/export separately or impicitly perform in load/save?
+---- I prefer implicitly. To do this, load should take a Playlist name *or* path.
+---- But prefpath fails to return a namestring when given a name with a file extension! :-/
+---- As for save, set-playlist could call playlist-to-m3u before existing on each invocation.
+---- ...but then we ought to hash the file to prevent repeat saves/disk writes of unmodified copy.
 -- M3U import should probably raise a condition or warn the user if it can't find a song, etc.
 -- Is there a good way to rearrange song order in the playqueue at present?
 * Last.fm/Scrobbling Support

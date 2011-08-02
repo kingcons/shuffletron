@@ -123,6 +123,11 @@ Command list:
   shuffle SONGS  Play songs in random order.
 
   queue          Print queue contents and current song playing.
+  queue names    List any existing playlists.
+  queue load X   Load the playlist (X) if it exists.
+  queue save X   Save the playqueue under the given name (X).
+  queue stash    Stash the playqueue, overwriting any former stash.
+  queue unstash  Restore the playqueue from stash, losing unsaved playlists.
   shuffle        Randomize order of songs in queue.
   clear          Clear the queue (current song continues playing)
   loop           Toggle loop mode (loop through songs in queue)
