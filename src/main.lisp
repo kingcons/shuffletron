@@ -88,7 +88,7 @@ type \"scanid3\". It may take a moment.~%"
 (defun parse-and-execute (line)
  (let* ((sepidx (position #\Space line))
         (command (subseq line 0 sepidx))
-        (args    (and sepidx (string-trim " " (subseq line sepidx)))))
+        (args (and sepidx (string-trim " " (subseq line sepidx)))))
   (cond
 
     ;; Back: restore previous selection.
@@ -200,6 +200,17 @@ type \"scanid3\". It may take a moment.~%"
 
     ;; Show playqueue
     ((string= line "queue") (show-playqueue))
+
+    ;; Stash the Playqueue
+    ((string= line "queue stash")
+     (with-playqueue ()
+       (set-playlist "shuffletron-stash" (coerce *playqueue* 'vector))
+       (setf *playqueue* nil)))
+
+    ;; Restore the Playqueue
+    ((string= line "queue unstash")
+     (with-playqueue ()
+       (setf *playqueue* (coerce (get-playlist "shuffletron-stash") 'list))))
 
     ;; Show current song
     ((string= line "now") (show-current-song))
