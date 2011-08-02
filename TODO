@@ -1,12 +1,10 @@
 Features:
-Remaining features: (1) queue show, (2) implicit M3U import/export. (3) Prefpath improvements blocks 2.
+Remaining features: (2) implicit M3U import/export. (3) Prefpath improvements blocks 2. (4) is hashing for 2.
+(5) is build overhaul blocking 4. (6) is parse-and-execute and help cleanups. (7) is scrobbling and is blocked by 2 and 5.
+(8) is having some append-only history to support "prev" track command. (9) PKGBUILD!
 Schedule: 5 should be done by evening 08/06. 3+2 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01. 8 by 2012. :)
-(4) is hashing for 2. (5) is build overhaul blocking 4. (6) is parse-and-execute and help cleanups.
-(7) is scrobbling and is blocked by 2 and 5. (8) is having some append-only history to support "prev" track command.
-(9) PKGBUILD!
 * Playlists
--- Suggested commands: queue show $name?
----- Make get-playlist lookup case-insensitive? Insertion via set-playlist should correspond...
+-- Make get-playlist lookup case-insensitive? Insertion via set-playlist should correspond...
 -- Support M3U import/export separately or impicitly perform in load/save?
 ---- I prefer implicitly. To do this, load should take a Playlist name *or* path.
 ---- But prefpath fails to return a namestring when given a name with a file extension! :-/

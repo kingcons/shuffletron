@@ -124,6 +124,7 @@ Command list:
 
   queue          Print queue contents and current song playing.
   queue names    List any existing playlists.
+  queue show X   Print the numbered tracklist of X.
   queue load X   Load the playlist (X) if it exists.
   queue save X   Save the playqueue under the given name (X).
   queue stash    Stash the playqueue, overwriting any former stash.

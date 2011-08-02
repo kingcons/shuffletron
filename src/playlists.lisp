@@ -39,6 +39,6 @@ m3u at path. If a song cannot be found in the library, warn the user."
          do (unless (string= "" line)
               (let ((result (query line)))
                 (if (zerop (length result))
-                    (format t "Warning - Couldn't find song: ~a~%" line)
+                    (format t "Warning - Couldn't find song: ~s~%" line)
                     (vector-push-extend (aref result 0) playlist))))))
     (set-playlist name playlist)))

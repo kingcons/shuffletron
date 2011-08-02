@@ -239,6 +239,20 @@ type \"scanid3\". It may take a moment.~%"
            (format t "Available playlists are: ~{~s~^,~}~%" playlists)
            (format t "No playlists found. Add some!~%"))))
 
+    ;; Show the tracks on a given playlist
+    ((and (string= command "queue")
+          (equalp subcommand "show"))
+     (let* ((name (subseq line (+ sepidx2 1)))
+            (playlist (coerce (get-playlist name) 'list)))
+       (if playlist
+           (progn
+             (format t "~a Tracklist:~%" name)
+             (dotimes (i (length playlist))
+               (let ((tags (song-id3 (nth i playlist))))
+                 (format t "(~d) ~a - ~a~%" (+ i 1)
+                         (getf tags :artist) (getf tags :title)))))
+           (format t "Couldn't find playlist: ~s~%" name))))
+
     ;; Show current song
     ((string= line "now") (show-current-song))
 
