@@ -1,5 +1,9 @@
 Features:
 * Playlists
+Remaining features: (1) queue show, (2) implicit M3U import/export. (3) Prefpath improvements blocks 2.
+(4) is hashing for 2. (5) is build overhaul blocking 4. (6) is parse-and-execute and help cleanups.
+(7) is scrobbling and is blocked by 2 and 5. (8) is having some append-only history to support "prev" track command.
+Schedule: 5 should be done by evening 08/06. 3+2 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01. 8 by 2012. :)
 -- Suggested commands: queue show $name?
 ---- Make get-playlist lookup case-insensitive? Insertion via set-playlist should correspond...
 -- Support M3U import/export separately or impicitly perform in load/save?
@@ -7,9 +11,12 @@ Features:
 ---- But prefpath fails to return a namestring when given a name with a file extension! :-/
 ---- As for save, set-playlist could call playlist-to-m3u before existing on each invocation.
 ---- ...but then we ought to hash the file to prevent repeat saves/disk writes of unmodified copy.
--- M3U import should probably raise a condition or warn the user if it can't find a song, etc.
+---- New format for *playlists* entries is: ((name . hash) . songs)
+------ Do we use ironclad or just md5 for this?
+------ We'll also need drakma for the scrobbling support, I expect. Makefiles should be overhauled and deploy tested.
 -- Is there a good way to rearrange song order in the playqueue at present?
 * Last.fm/Scrobbling Support
+* PKGBUILD?
 
 Cleanup:
 -- parse-and-execute in main is almost 300 lines now. Personally, I'd like to see these split up into lots of little functions.
@@ -17,6 +24,12 @@ Cleanup:
 -- print-commands should use introspection via DOCUMENTATION as far as I'm concerned.
 ---- How do we just get it for commands though? Maybe a defcommand macro with Syntax/Usage + Description.
 ---- What useful patterns can we pull out into a defcommand macro? Playqueue commands etc?
+-- We should clean up build-sbcl.lisp and either update/fix or remove the Makefile stuff+buildscripts for ccl.
+---- Cleanup == fix (load "shuffletron.asd") + ccl stuff. Utilize quicklisp?
+---- Can we have a single build.lisp file? All we really care is that people can git clone + make + make install.
+------ Supporting install to prefixes other than /usr/local/ would also be great.
+-- Should we depend on and use quicklisp? I think so.
+---- You could even make a separate PKGBUILD for it a la leiningen but I'm dubious on the benefits.
 
 Bugs:
 
