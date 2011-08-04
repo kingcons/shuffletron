@@ -20,7 +20,7 @@
            (let* ((path (if (listp path) (car (last path)) path))
                   (separator (position #\. path)))
              (if (and separator (plusp separator) (= (count #\. path) 1))
-                 (list (subseq path 0 (- separator 1)) (subseq path (+ separator 1)))
+                 (list (subseq path 0 separator) (subseq path (+ separator 1)))
                  (list path)))))
     (let ((name-type (find-type prefname))
           (subpath (if (listp prefname) (subpath prefname) nil))

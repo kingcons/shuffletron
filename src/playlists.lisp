@@ -3,11 +3,11 @@
 (defvar *playlists* nil)
 
 (defun save-playlists ()
-  (setf (pref "playlists") *playlists*)
+  (setf (pref "playlists.db") *playlists*)
   (values))
 
 (defun load-playlists ()
-  (loop for (name . songs) in (pref "playlists" '())
+  (loop for (name . songs) in (pref "playlists.db" '())
      do (set-playlist name songs)))
 
 (defun get-playlist (name)
@@ -31,6 +31,7 @@
   "Export a playlist to m3u with the given name in ~/.shuffletron/playlists/.
 If there is an existing file with the same name, it will be overwritten."
   (let ((path (prefpath `("playlists" ,(format nil "~a.m3u" name)))))
+    (ensure-directories-exist path)
     (with-open-file (out path :direction :output :if-exists :supersede)
       (loop for song across (get-playlist playlist)
          do (format out "~a~%" (song-local-path song))))))

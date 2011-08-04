@@ -229,10 +229,11 @@ type \"scanid3\". It may take a moment.~%"
        (cond ((get-playlist name)
               (with-playqueue ()
                 (setf *playqueue* (coerce (get-playlist name) 'list))))
-             ((and (probe-file name) (string= "m3u" (pathname-type name))
-                   (playlist-from-m3u name))
+             ((and (probe-file name) (string= "m3u" (pathname-type name)))
+              (playlist-from-m3u name)
               (with-playqueue ()
-                (setf *playqueue* (coerce (get-playlist name) 'list))))
+                (setf *playqueue* (coerce (get-playlist (pathname-name name))
+                                          'list))))
              (t
               (format t "Couldn't find playlist: ~s~%" name)))))
 
@@ -258,12 +259,12 @@ type \"scanid3\". It may take a moment.~%"
      (let* ((name (subseq line (+ sepidx2 1)))
             (playlist (coerce (get-playlist name) 'list)))
        (if playlist
-           (progn
-             (format t "~a Tracklist:~%" name)
-             (dotimes (i (length playlist))
-               (let ((tags (song-id3 (nth i playlist))))
-                 (format t "(~d) ~a - ~a~%" (+ i 1)
-                         (getf tags :artist) (getf tags :title)))))
+           (let ((temp *playqueue*))
+             (with-playqueue ()
+               (setf *playqueue* playlist))
+             (show-playqueue)
+             (with-playqueue ()
+               (setf *playqueue* temp)))
            (format t "Couldn't find playlist: ~s~%" name))))
 
     ;; Show current song
