@@ -126,7 +126,8 @@ Command list:
   queue names    List any existing playlists.
   queue show X   Print the numbered tracklist of X.
   queue load X   Load the playlist (X) if it exists.
-  queue save X   Save the playqueue under the given name (X).
+  queue save X   Save the queue under the given name (X), overwriting if needed.
+  queue del X    Delete the playlist X.
   queue stash    Stash the playqueue, overwriting any former stash.
   queue unstash  Restore the playqueue from stash, losing unsaved playlists.
   shuffle        Randomize order of songs in queue.

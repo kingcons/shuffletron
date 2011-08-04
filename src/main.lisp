@@ -232,6 +232,15 @@ type \"scanid3\". It may take a moment.~%"
              (t
               (format t "Couldn't find playlist: ~s~%" name)))))
 
+    ;; Delete a Playlist (and any corresponding M3U)
+    ((and (string= command "queue")
+          (equalp subcommand "del"))
+     (let* ((name (subseq line (+ sepidx2 1)))
+            (playlist (get-playlist name)))
+       (if playlist
+           (delete-playlist name)
+           (format t "Couldn't find playlist: ~s~%" name))))
+
     ;; Show available playlists
     ((string= line "queue names")
      (let ((playlists (list-playlists)))

@@ -13,6 +13,9 @@
 (defun get-playlist (name)
   (cdr (assoc name *playlists* :test #'equal)))
 
+(defun delete-playlist (name)
+  (setf *playlists* (remove name *playlists* :key #'car :test #'equal)))
+
 (defun list-playlists ()
   (loop for (name . songs) in *playlists* collecting name))
 
