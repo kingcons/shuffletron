@@ -16,13 +16,20 @@
 (defun subpath (list) (subseq list 0 (1- (length list))))
 
 (defun prefpath (prefname &key (profile *profile*))
-  (let ((name (if (listp prefname) (car (last prefname)) prefname))
-        (subpath (if (listp prefname) (subpath prefname) nil))
-        (*profile* profile))
-    (merge-pathnames
-     (make-pathname :directory `(:relative ".shuffletron" ,@(profile-path-component) ,@(mapcar #'string subpath))
-                    :name (and name (string name)))
-     (user-homedir-pathname))))
+  (flet ((find-type (path)
+           (let* ((path (if (listp path) (car (last path)) path))
+                  (separator (position #\. path)))
+             (if (and separator (plusp separator) (= (count #\. path) 1))
+                 (list (subseq path 0 (- separator 1)) (subseq path (+ separator 1)))
+                 (list path)))))
+    (let ((name-type (find-type prefname))
+          (subpath (if (listp prefname) (subpath prefname) nil))
+          (*profile* profile))
+      (merge-pathnames
+       (make-pathname :directory `(:relative ".shuffletron" ,@(profile-path-component) ,@(mapcar #'string subpath))
+                      :name (and (car name-type) (string (car name-type)))
+                      :type (second name-type))
+       (user-homedir-pathname)))))
 
 (defun pref (name &optional default)
   (handler-case (values (file (prefpath name)) t)
