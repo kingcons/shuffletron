@@ -27,6 +27,7 @@
   (load-tags)
   (compute-filtered-library)
   (load-id3-cache)
+  (load-playlists)
   (reset-query)
   ;; Scan tags of new files automatically, unless there's a ton of them.
   (let ((need (songs-needing-id3-scan)))
@@ -225,8 +226,11 @@ type \"scanid3\". It may take a moment.~%"
     ((and (string= command "queue")
           (equalp subcommand "load"))
      (let ((name (subseq line (+ sepidx2 1))))
-       ;; TODO: Add probe-file/M3U import support.
        (cond ((get-playlist name)
+              (with-playqueue ()
+                (setf *playqueue* (coerce (get-playlist name) 'list))))
+             ((and (probe-file name) (string= "m3u" (pathname-type name))
+                   (playlist-from-m3u name))
               (with-playqueue ()
                 (setf *playqueue* (coerce (get-playlist name) 'list))))
              (t

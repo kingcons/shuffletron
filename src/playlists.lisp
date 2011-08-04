@@ -7,14 +7,15 @@
   (values))
 
 (defun load-playlists ()
-  (loop for (name playlist) in (pref "playlists" '())
-     do (set-playlist name playlist)))
+  (loop for (name . songs) in (pref "playlists" '())
+     do (set-playlist name songs)))
 
 (defun get-playlist (name)
   (cdr (assoc name *playlists* :test #'equal)))
 
 (defun delete-playlist (name)
-  (setf *playlists* (remove name *playlists* :key #'car :test #'equal)))
+  (setf *playlists* (remove name *playlists* :key #'car :test #'equal))
+  (save-playlists))
 
 (defun list-playlists ()
   (loop for (name . songs) in *playlists* collecting name))
@@ -22,12 +23,14 @@
 (defun set-playlist (name songs)
   (if (get-playlist name)
       (setf (cdr (assoc name *playlists* :test #'equal)) songs)
-      (setf *playlists* (acons name songs *playlists*))))
+      (setf *playlists* (acons name songs *playlists*)))
+  (playlist-to-m3u name)
+  (save-playlists))
 
 (defun playlist-to-m3u (playlist &key (name playlist))
   "Export a playlist to m3u with the given name in ~/.shuffletron/playlists/.
 If there is an existing file with the same name, it will be overwritten."
-  (let ((path (prefpath (format nil "~a.m3u" name))))
+  (let ((path (prefpath `("playlists" ,(format nil "~a.m3u" name)))))
     (with-open-file (out path :direction :output :if-exists :supersede)
       (loop for song across (get-playlist playlist)
          do (format out "~a~%" (song-local-path song))))))

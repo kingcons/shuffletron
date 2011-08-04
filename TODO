@@ -1,20 +1,22 @@
 Features:
-Remaining features: (2) implicit M3U import/export. (4) is hashing for 2.
-(5) is build overhaul blocking 4. (6) is parse-and-execute and help cleanups. (7) is scrobbling and is blocked by 2 and 5.
+Remaining features: (4) is hashing for set-playlist+2. (5) is build overhaul blocking 4.
+(6) is parse-and-execute and help cleanups. (7) is scrobbling and is blocked by 2 and 5.
 (8) is having some append-only history to support "prev" track command. (9) PKGBUILD!
-Schedule: 2+4 should be done by evening 08/06. 5 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01. 8 by 2012. :)
+(10) Tests!!!
+Schedule: 2+4 should be done by evening 08/06. 5 should be done by 08/13.
+6 should be done by 08/20 and 7 by 09/01. 9 by 09/15 and 8+10 by 2012. :)
 * Playlists
 -- Make get-playlist lookup case-insensitive? Insertion via set-playlist should correspond...
--- Support M3U import/export separately or impicitly perform in load/save?
----- I prefer implicitly. To do this, load should take a Playlist name *or* path.
----- But prefpath fails to return a namestring when given a name with a file extension! :-/
----- As for save, set-playlist could call playlist-to-m3u before existing on each invocation.
----- ...but then we ought to hash the file to prevent repeat saves/disk writes of unmodified copy.
----- New format for *playlists* entries is: ((name . hash) . songs)
------- Do we use ironclad or just md5 for this?
+-- ... we ought to hash the file to prevent repeat saves of unmodified lists in set-playlist.
+---- New format for *playlists* entries is: (name . (songs . hash))
+------ Do we use ironclad or just md5 for this? Just md5, scrobbling doesn't need sha1, smaller.
 ------ We'll also need drakma for the scrobbling support, I expect. Makefiles should be overhauled and deploy tested.
 -- Is there a good way to rearrange song order in the playqueue at present?
 * Last.fm/Scrobbling Support
+-- Should cache when network connectivity is absent and scrobble later.
+-- Should only scrobble songs that you listened to more than X% of. X should be a config option.
+---- Skipping to the last 5% of the track (say when working on a mixtape) shouldn't trigger scrobbling.
+-- Should have a condition for incorrect username+password at the very least.
 
 Cleanup:
 -- parse-and-execute in main is almost 300 lines now. Personally, I'd like to see these split up into lots of little functions.
@@ -28,6 +30,8 @@ Cleanup:
 ------ Supporting install to prefixes other than /usr/local/ would also be great.
 -- Should we depend on and use quicklisp? I think so.
 ---- You could even make a separate PKGBUILD for it a la leiningen but I'm dubious on the benefits.
+-- Improve condition handling and errors as much as possible. Especially re: playlists and scrobbling.
+-- Test suite!!!
 
 Bugs:
 

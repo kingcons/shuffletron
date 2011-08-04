@@ -125,8 +125,9 @@ Command list:
   queue          Print queue contents and current song playing.
   queue names    List any existing playlists.
   queue show X   Print the numbered tracklist of X.
-  queue load X   Load the playlist (X) if it exists.
+  queue load X   Load the playlist (X) if it exists or the absolute M3U path X.
   queue save X   Save the queue under the given name (X), overwriting if needed.
+                 Also exports an M3U of the queue to ~/.shuffletron/playlists/.
   queue del X    Delete the playlist X.
   queue stash    Stash the playqueue, overwriting any former stash.
   queue unstash  Restore the playqueue from stash, losing unsaved playlists.
