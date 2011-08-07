@@ -1,18 +1,18 @@
 Features:
-Remaining features: (4) is hashing for set-playlist+2. (5) is build overhaul blocking 4.
-(6) is parse-and-execute and help cleanups. (7) is scrobbling and is blocked by 2 and 5.
+Remaining features: (5) is build overhaul. (6) is parse-and-execute and help cleanups.
+(7) is scrobbling and is blocked by 2 and 5.
 (8) is having some append-only history to support "prev" track command. (9) PKGBUILD!
 (10) Tests!!!
-Schedule: 2+4 should be done by evening 08/06. 5 should be done by 08/13.
-6 should be done by 08/20 and 7 by 09/01. 9 by 09/15 and 8+10 by 2012. :)
-* Playlists
--- Make get-playlist lookup case-insensitive? Insertion via set-playlist should correspond...
--- ... we ought to hash the file to prevent repeat saves of unmodified lists in set-playlist.
----- New format for *playlists* entries is: (name . (songs . hash))
------- Do we use ironclad or just md5 for this? Just md5, scrobbling doesn't need sha1, smaller.
------- We'll also need drakma for the scrobbling support, I expect. Makefiles should be overhauled and deploy tested.
+Schedule: 5 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01.
+9 by 09/15 and 8+10 by 2012. :)
+
+* UI Thoughts+Concerns
+-- Make queue load case-insensitive? save, show, etc should correspond...
 -- Is there a good way to rearrange song order in the playqueue at present?
+-- Some sort of autocompletion, esp. for playlists/filepaths would be great.
+
 * Last.fm/Scrobbling Support
+-- We'll need drakma for the scrobbling support. Makefiles should be overhauled and deploy tested.
 -- Should cache when network connectivity is absent and scrobble later.
 -- Should only scrobble songs that you listened to more than X% of. X should be a config option.
 ---- Skipping to the last 5% of the track (say when working on a mixtape) shouldn't trigger scrobbling.

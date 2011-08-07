@@ -10,6 +10,9 @@
   (loop for (name . songs) in (pref "playlists.db" '())
      do (set-playlist name songs)))
 
+(defun playlist-path (name)
+  (prefpath `("playlists" ,(format nil "~a.m3u" name))))
+
 (defun get-playlist (name)
   (cdr (assoc name *playlists* :test #'equal)))
 
@@ -24,13 +27,20 @@
   (if (get-playlist name)
       (setf (cdr (assoc name *playlists* :test #'equal)) songs)
       (setf *playlists* (acons name songs *playlists*)))
-  (playlist-to-m3u name)
-  (save-playlists))
+  (let ((path (playlist-path name)))
+    (unless (and (probe-file path)
+                 (equalp (md5:md5sum-file path)
+                         (md5:md5sum-sequence
+                          (format nil "~{~A~%~}"
+                                  (loop for song across (get-playlist name)
+                                     collecting (song-local-path song))))))
+      (playlist-to-m3u name)
+      (save-playlists))))
 
-(defun playlist-to-m3u (playlist &key (name playlist))
+(defun playlist-to-m3u (playlist)
   "Export a playlist to m3u with the given name in ~/.shuffletron/playlists/.
 If there is an existing file with the same name, it will be overwritten."
-  (let ((path (prefpath `("playlists" ,(format nil "~a.m3u" name)))))
+  (let ((path (playlist-path playlist)))
     (ensure-directories-exist path)
     (with-open-file (out path :direction :output :if-exists :supersede)
       (loop for song across (get-playlist playlist)
