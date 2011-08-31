@@ -42,6 +42,8 @@
 
 (defun end-stream (stream)
   ;; TODO: Fade out nicely.
+  (mapcar (lambda (fn)
+            (apply (first fn) (rest fn))) *next-song-hook*)
   (setf (stopped stream) t)
   (mixer-remove-streamer *mixer* stream)
   (setf *current-stream* nil)
@@ -57,6 +59,8 @@
   "Start a song playing, overriding the existing song. Returns the new
 stream if successful, or NIL if the song could not be played."
   (when-playing (stream) (end-stream stream))
+  (mapcar (lambda (fn)
+            (apply (first fn) (rest fn))) *play-song-hook*)
   (prog1
       (handler-case
           (with-stream-control ()

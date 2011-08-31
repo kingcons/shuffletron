@@ -80,6 +80,8 @@ type \"scanid3\". It may take a moment.~%"
                        ((eql mode-char #\-) (- samples))
                        (t 0)))
          (time (and base offset (+ base offset))))
+    (mapcar (lambda (fn)
+              (apply (first fn) (rest fn))) *seek-hook*)
     (cond
       ((null current) (format t "No song is playing.~%"))
       ((null time) (format t "Seek to where?~%"))

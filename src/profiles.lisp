@@ -26,7 +26,9 @@
           (subpath (if (listp prefname) (subpath prefname) nil))
           (*profile* profile))
       (merge-pathnames
-       (make-pathname :directory `(:relative ".shuffletron" ,@(profile-path-component) ,@(mapcar #'string subpath))
+       (make-pathname :directory `(:relative ".shuffletron"
+                                             ,@(profile-path-component)
+                                             ,@(mapcar #'string subpath))
                       :name (and (car name-type) (string (car name-type)))
                       :type (second name-type))
        (user-homedir-pathname)))))
