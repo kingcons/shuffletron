@@ -6,17 +6,24 @@ Remaining features: (5) is build overhaul. (6) is parse-and-execute and help cle
 Schedule: 5 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01.
 9 by 09/15 and 8+10 by 2012. :)
 
+* Export library-scan in some fashion so folks can reindex without restarting.
+-- Does this fuxor the queue or otherwise screw up stuff. Thread-safe?
+** Library-scan is not enough. I had to outright call init again.
+-- Why? That's F-in annoying!
+
 * UI Thoughts+Concerns
 -- Make queue load case-insensitive? save, show, etc should correspond...
 -- Is there a good way to rearrange song order in the playqueue at present?
 -- Some sort of autocompletion, esp. for playlists/filepaths would be great.
 
 * Last.fm/Scrobbling Support
--- We'll need drakma for the scrobbling support. Makefiles should be overhauled and deploy tested.
--- Should cache when network connectivity is absent and scrobble later.
+-- We'll need cl-scrobbler for the scrobbling support. Makefiles should be overhauled and deploy tested.
 -- Should only scrobble songs that you listened to more than X% of. X should be a config option.
 ---- Skipping to the last 5% of the track (say when working on a mixtape) shouldn't trigger scrobbling.
--- Should have a condition for incorrect username+password at the very least.
+
+* ID3 Tag editing?
+-- Seems kind of ambitious but it's a good idea.
+---- Do mixalot's mpg123 bindings cover this or would we need more dependencies?
 
 Cleanup:
 -- parse-and-execute in main is almost 300 lines now. Personally, I'd like to see these split up into lots of little functions.
@@ -32,8 +39,10 @@ Cleanup:
 ---- You could even make a separate PKGBUILD for it a la leiningen but I'm dubious on the benefits.
 -- Improve condition handling and errors as much as possible. Especially re: playlists and scrobbling.
 -- Test suite!!!
+-- The AUR PKGBUILD should be sure to quickload shuffletron during install or post-install. User shouldn't have a long wait on first load.
 
 Bugs:
 
 Other:
 * Vorbis support?
+* Volume support? (Note: This is mostly a mixalot TODO)
