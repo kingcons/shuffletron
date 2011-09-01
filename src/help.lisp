@@ -166,6 +166,8 @@ Command list:
   time           Print current time
   alarm          Set alarm (see \"help alarms\")
 
+  scrobble       Turn last.fm scrobbling 'on' or 'off'.
+
   scanid3        Scan new files for ID3 tags
   prescan        Toggle file prescanning (useful if file IO is slow)
   exit           Exit the program.

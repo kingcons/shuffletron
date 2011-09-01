@@ -11,6 +11,10 @@ Schedule: 5 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01.
 ** Library-scan is not enough. I had to outright call init again.
 -- Why? That's F-in annoying!
 
+* Config File
+Whoops. I was dumb enough to forget offering a scrobbling toggle.
+-- But I don't want to have to remember or type that every time. Init file?
+
 * UI Thoughts+Concerns
 -- Make queue load case-insensitive? save, show, etc should correspond...
 -- Is there a good way to rearrange song order in the playqueue at present?

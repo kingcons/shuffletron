@@ -269,6 +269,15 @@ type \"scanid3\". It may take a moment.~%"
                (setf *playqueue* temp)))
            (format t "Couldn't find playlist: ~s~%" name))))
 
+    ;; Last.fm/Scrobbling plugin toggle
+    ((string= command "scrobble")
+     (cond ((equalp subcommand "on")
+            (setf cl-scrobbler:*scrobble-p* t))
+           ((equalp subcommand "off")
+            (setf cl-scrobbler:*scrobble-p* nil))
+           (t
+            (format t "Please turn the plugin 'on' or 'off'.~%"))))
+
     ;; Show current song
     ((string= line "now") (show-current-song))
 
