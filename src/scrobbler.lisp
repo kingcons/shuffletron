@@ -4,22 +4,26 @@
   (ensure-directories-exist path)
   (setf cl-scrobbler:*config-dir* (directory-namestring path)))
 
-(defun track-timing ()
-  (list
-   (round (streamer-length *current-stream* *mixer*) (mixer-rate *mixer*))
-   (round (streamer-position *current-stream* *mixer*) (mixer-rate *mixer*))))
+(defun song-position ()
+  (round (or (streamer-position *current-stream* *mixer*) 0)
+         (mixer-rate *mixer*)))
 
-(defun track-metadata ()
-  (let ((id3 (song-id3 (song-of *current-stream*))))
-    (list (getf id3 :title) (getf id3 :artist))))
+(defun song-metadata ()
+  (when (current-song-playing)
+    (let ((id3 (song-id3 (current-song-playing))))
+      ;; Use (pathname-name (song-local-path (current-song-playing))) instead?
+      (list (or (getf id3 :title) "Unknown Song")
+            (or (getf id3 :artist) "Unknown Artist")
+            (round (streamer-length *current-stream* *mixer*)
+                   (mixer-rate *mixer*))))))
 
-(setf cl-scrobbler:*track-info-fn* #'track-metadata
-      cl-scrobbler:*track-time-fn* #'track-timing)
-
-(setf *seek-hook* (list (lambda ()
-                          (cl-scrobbler:set-last-seek (second (track-timing)))))
-      *play-song-hook* (list #'cl-scrobbler:set-last-seek)
-      *next-song-hook* (list #'cl-scrobbler:maybe-queue-scrobble))
+;;; Raw, unrepentant glue.
+(setf cl-scrobbler:*song-info-fn* #'song-metadata
+      cl-scrobbler:*song-time-fn* #'song-position
+      *seek-hook* (list #'cl-scrobbler:update-last-seek)
+      *next-hook* (list #'cl-scrobbler:update-skipped)
+      *song-end-hook* (list #'cl-scrobbler:maybe-queue-scrobble)
+      *song-begin-hook* (list #'cl-scrobbler:update-song-info))
 
 (bordeaux-threads:make-thread #'cl-scrobbler:scrobbler-init
                               :name "Scrobbler thread")

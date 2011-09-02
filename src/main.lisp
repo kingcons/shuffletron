@@ -84,8 +84,11 @@ type \"scanid3\". It may take a moment.~%"
       ((null current) (format t "No song is playing.~%"))
       ((null time) (format t "Seek to where?~%"))
       (time
-       (mapcar #'funcall *seek-hook*)
-       (streamer-seek current *mixer* (max time 0)))
+       (streamer-seek current *mixer* (max time 0))
+       ;; KLUDGE
+       ;; Sleep is unfortunate but seems to be needed to avoid a race.
+       (sleep .1)
+       (mapcar #'funcall *seek-hook*))
       (t nil))))
 
 (defun parse-and-execute (line)
@@ -145,6 +148,7 @@ type \"scanid3\". It may take a moment.~%"
 
     ;; Skip current song. If looping, don't play this again.
     ((string= line "skip")
+     (mapcar #'funcall *next-hook*)
      (skip-song)
      (show-current-song))
 
@@ -152,6 +156,7 @@ type \"scanid3\". It may take a moment.~%"
     ;; looping is enabled: whereas 'skip' drops the song from the
     ;; queue, 'next' puts it at the end of the queue.
     ((string= line "next")
+     (mapcar #'funcall *next-hook*)
      (play-next-song)
      (show-current-song))
 
@@ -272,9 +277,11 @@ type \"scanid3\". It may take a moment.~%"
     ;; Last.fm/Scrobbling plugin toggle
     ((string= command "scrobble")
      (cond ((equalp subcommand "on")
-            (setf cl-scrobbler:*scrobble-p* t))
+            (setf cl-scrobbler:*scrobble-p* t)
+            (format t "Last.fm scrobbling enabled.~%"))
            ((equalp subcommand "off")
-            (setf cl-scrobbler:*scrobble-p* nil))
+            (setf cl-scrobbler:*scrobble-p* nil)
+            (format t "Last.fm scrobbling disabled.~%"))
            (t
             (format t "Please turn the plugin 'on' or 'off'.~%"))))
 
