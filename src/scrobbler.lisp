@@ -25,5 +25,7 @@
       *song-end-hook* (list #'cl-scrobbler:maybe-queue-scrobble)
       *song-begin-hook* (list #'cl-scrobbler:update-song-info))
 
-(bordeaux-threads:make-thread #'cl-scrobbler:scrobbler-init
+(bordeaux-threads:make-thread (lambda ()
+                                (cl-scrobbler:scrobbler-init)
+                                (cl-scrobbler:scrobbler-loop))
                               :name "Scrobbler thread")
