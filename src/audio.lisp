@@ -83,7 +83,9 @@ stream if successful, or NIL if the song could not be played."
 
 (defun play-songs (songs)
   "Prepend songs to the queue and play the first one immediately."
-  (when-playing (stream) (end-stream stream))
+  (when-playing (stream)
+    (mapcar #'funcall *next-hook*)
+    (end-stream stream))
   (with-playqueue ()
     (setf *playqueue* (concatenate 'list songs *playqueue*)))
   (play-next-song))

@@ -39,6 +39,7 @@ Cleanup:
 -- print-commands should use introspection via DOCUMENTATION as far as I'm concerned.
 ---- How do we just get it for commands though? Maybe a defcommand macro with Syntax/Usage + Description.
 ---- What useful patterns can we pull out into a defcommand macro? Playqueue commands etc?
+-- *next-hook* usage is kind of gross. Can we localize it more? Better way...
 -- Improve condition handling and errors as much as possible. Especially re: playlists and scrobbling.
 -- Test suite!!!
 
