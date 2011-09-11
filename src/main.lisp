@@ -276,14 +276,14 @@ type \"scanid3\". It may take a moment.~%"
 
     ;; Last.fm/Scrobbling plugin toggle
     ((string= command "scrobble")
-     (cond ((equalp subcommand "on")
-            (setf cl-scrobbler:*scrobble-p* t)
-            (format t "Last.fm scrobbling enabled.~%"))
-           ((equalp subcommand "off")
-            (setf cl-scrobbler:*scrobble-p* nil)
-            (format t "Last.fm scrobbling disabled.~%"))
-           (t
-            (format t "Please turn the plugin 'on' or 'off'.~%"))))
+     (cond ((equalp subcommand "toggle")
+            (format t "~A~%" (cl-scrobbler:toggle-scrobbling)))
+           ((equalp subcommand "nowplaying")
+            (format t "~A~%" (cl-scrobbler:toggle-now-playing)))
+           ((equalp subcommand "queue")
+            (format t "Queued scrobbles are:~%")
+            (loop for (song x artist) in (cl-scrobbler:cache-contents)
+               do (format t "~A -- ~A~%" artist song)))))
 
     ;; Show current song
     ((string= line "now") (show-current-song))

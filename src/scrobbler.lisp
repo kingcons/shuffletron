@@ -23,7 +23,8 @@
       *seek-hook* (list #'cl-scrobbler:update-last-seek)
       *next-hook* (list #'cl-scrobbler:update-skipped)
       *song-end-hook* (list #'cl-scrobbler:maybe-queue-scrobble)
-      *song-begin-hook* (list #'cl-scrobbler:update-song-info))
+      *song-begin-hook* (list #'cl-scrobbler:update-song-info
+                              #'cl-scrobbler:update-now-playing))
 
 (bordeaux-threads:make-thread (lambda ()
                                 (cl-scrobbler:scrobbler-init)

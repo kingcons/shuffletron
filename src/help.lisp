@@ -166,7 +166,9 @@ Command list:
   time           Print current time
   alarm          Set alarm (see \"help alarms\")
 
-  scrobble       Turn last.fm scrobbling 'on' or 'off'.
+  scrobble toggle      Toggle queueing of songs for scrobbling to last.fm.
+  scrobble nowplaying  Toggle updating the nowplaying status on last.fm.
+  scrobble queue       Show the current songs queued for scrobbling.
 
   scanid3        Scan new files for ID3 tags
   prescan        Toggle file prescanning (useful if file IO is slow)

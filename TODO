@@ -1,17 +1,11 @@
 Features:
 Remaining features: (5) is build overhaul. (6) is parse-and-execute and help cleanups.
-(7) is scrobbling and is blocked by 2 and 5.
 (8) is having some append-only history to support "prev" track command. (9) PKGBUILD!
 (10) Tests!!!
-Schedule: 5 should be done by 08/13. 6 should be done by 08/20 and 7 by 09/01.
+Schedule: 5 should be done by 08/13. 6 should be done by 08/20.
 9 by 09/15 and 8+10 by 2012. :)
 
-* Export library-scan in some fashion so folks can reindex without restarting.
--- Does this fuxor the queue or otherwise screw up stuff. Thread-safe?
-** Library-scan is not enough. I had to outright call init again.
--- Why? That's F-in annoying!
-
-* Config File
+* Config File?
 Whoops. I was dumb enough to forget offering a scrobbling toggle.
 -- But I don't want to have to remember or type that every time. Init file?
 
@@ -19,11 +13,21 @@ Whoops. I was dumb enough to forget offering a scrobbling toggle.
 -- Make queue load case-insensitive? save, show, etc should correspond...
 -- Is there a good way to rearrange song order in the playqueue at present?
 -- Some sort of autocompletion, esp. for playlists/filepaths would be great.
+-- Export library-scan in some fashion so folks can reindex without restarting.
+---- Does this fuxor the queue or otherwise screw up stuff. Thread-safe?
+---- Library-scan is not enough. I had to outright call init again.
+---- Why? That's F-in annoying!
 
-* Last.fm/Scrobbling Support
--- We'll need cl-scrobbler for the scrobbling support. Makefiles should be overhauled and deploy tested.
--- Should only scrobble songs that you listened to more than X% of. X should be a config option.
----- Skipping to the last 5% of the track (say when working on a mixtape) shouldn't trigger scrobbling.
+* Build System
+-- We should clean up build-sbcl.lisp and either update/fix or remove the Makefile stuff+buildscripts for ccl. Test build+deploy!
+---- Cleanup == fix (load "shuffletron.asd") + ccl stuff. Utilize quicklisp?
+---- Can we have a single build.lisp file? All we really care is that people can git clone + make + make install (on several platforms, of course).
+------ Supporting install to prefixes other than /usr/local/ would also be great.
+
+* AUR Packages
+-- Should we depend on and use quicklisp? I think so.
+---- You could even make a separate PKGBUILD for it a la leiningen but I'm dubious on the benefits.
+-- The AUR PKGBUILD should be sure to quickload shuffletron during install or post-install. User shouldn't have a long wait on first load.
 
 * ID3 Tag editing?
 -- Seems kind of ambitious but it's a good idea.
@@ -35,15 +39,8 @@ Cleanup:
 -- print-commands should use introspection via DOCUMENTATION as far as I'm concerned.
 ---- How do we just get it for commands though? Maybe a defcommand macro with Syntax/Usage + Description.
 ---- What useful patterns can we pull out into a defcommand macro? Playqueue commands etc?
--- We should clean up build-sbcl.lisp and either update/fix or remove the Makefile stuff+buildscripts for ccl.
----- Cleanup == fix (load "shuffletron.asd") + ccl stuff. Utilize quicklisp?
----- Can we have a single build.lisp file? All we really care is that people can git clone + make + make install.
------- Supporting install to prefixes other than /usr/local/ would also be great.
--- Should we depend on and use quicklisp? I think so.
----- You could even make a separate PKGBUILD for it a la leiningen but I'm dubious on the benefits.
 -- Improve condition handling and errors as much as possible. Especially re: playlists and scrobbling.
 -- Test suite!!!
--- The AUR PKGBUILD should be sure to quickload shuffletron during install or post-install. User shouldn't have a long wait on first load.
 
 Bugs:
 
