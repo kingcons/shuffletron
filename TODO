@@ -5,11 +5,10 @@ Remaining features: (5) is build overhaul. (6) is parse-and-execute and help cle
 Schedule: 5 should be done by 08/13. 6 should be done by 08/20.
 9 by 09/15 and 8+10 by 2012. :)
 
-* Config File?
-Whoops. I was dumb enough to forget offering a scrobbling toggle.
--- But I don't want to have to remember or type that every time. Init file?
-
 * UI Thoughts+Concerns
+-- Fix error handling (esp. from Mixalot) so that we can "errors show" or something.
+---- The streamer and snd-pcm-recover info is gonna drive me crazy.
+------ That's *trace-output* stuff in Mixalot.
 -- Make queue load case-insensitive? save, show, etc should correspond...
 -- Is there a good way to rearrange song order in the playqueue at present?
 -- Some sort of autocompletion, esp. for playlists/filepaths would be great.
