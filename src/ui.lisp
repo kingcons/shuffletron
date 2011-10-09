@@ -129,7 +129,7 @@ pairs as cons cells."
 (defun spacing (n)
   (when (> n 0) (loop repeat n do (write-char #\.))))
 
-(defparameter *color-prefs* '(:artist (31) :album (33) :title (37) :elided (90)))
+(defparameter *color-prefs* '(:artist (31) :album (33) :title (34) :elided (90)))
 
 (defun show-song-matches (items &key (mode :query) (highlight-queue nil))
   (loop with hash = (and highlight-queue
