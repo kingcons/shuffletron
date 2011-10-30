@@ -261,6 +261,7 @@ type \"scanid3\". It may take a moment.~%"
            (format t "No playlists found. Add some!~%"))))
 
     ;; Show the tracks on a given playlist
+    ;; BUG: "queue show" by itself whines about name being NIL.
     ((and (string= command "queue")
           (equalp subcommand "show"))
      (let* ((name (subseq line (+ sepidx2 1)))

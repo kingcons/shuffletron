@@ -10,8 +10,11 @@
 (defun init-library ()
   (setf *library* (make-array 0 :fill-pointer 0 :adjustable t)))
 
-(defun mp3-p (filename)
-  (not (mismatch filename "mp3" :test #'char-equal :start1 (- (length filename) 3))))
+(defun ext-p (filename extension)
+  "Test a filename to see if it matches the given extension."
+  ;; FIXME: Why aren't we using pathname-type here?
+  (not (mismatch filename extension
+                 :test #'char-equal :start1 (- (length filename) 3))))
 
 (defvar *library-progress* 0)
 
@@ -20,7 +23,7 @@
 
 (defun carriage-return () (format t "~C" (code-char 13)))
 
-(defun add-mp3-file (full-filename relative-filename)
+(defun add-to-library (full-filename relative-filename)
   (let ((song (make-song :full-path full-filename
                          :local-path relative-filename
                          :smashed (smash-string relative-filename)
@@ -34,13 +37,14 @@
     (when (probe-file path)
       (walk path
             (lambda (filename)
-              (when (mp3-p filename)
+              (when (or (ext-p filename "mp3")
+                        (ext-p filename "ogg"))
                 (incf *library-progress*)
                 (when (zerop (mod *library-progress* 10))
                   (carriage-return)
                   (format t "Scanning. ~:D files.." *library-progress*)
                   (force-output))
-                (add-mp3-file filename (rel path filename)))))
+                (add-to-library filename (rel path filename)))))
       t)))
 
 (defun songs-needing-id3-scan () (count-if-not #'song-id3-p *library*))
@@ -60,6 +64,13 @@
         do (setf (song-id3-p song) t
                  (song-id3 song) id3)))
 
+(defun get-tags-for-song (absolute-path)
+  (let ((ext (string-downcase (pathname-type absolute-path))))
+    (cond ((string= "mp3" ext)
+           (mpg123:get-tags-from-file absolute-path :no-utf8 t))
+          ((string= "ogg" ext)
+           (vorbisfile:get-vorbis-tags-from-file absolute-path)))))
+
 (defun scan-id3-tags (&key verbose adjective)
   (format t "~&Scanning ID3 tags (~D).~%" (songs-needing-id3-scan))
   (when verbose (fresh-line))
@@ -71,7 +82,7 @@
           (carriage-return)
           (format t "Reading ~Atags: ~:D of ~:D" (or adjective "") n pending)
           (force-output))
-        (setf (song-id3 song) (mpg123:get-tags-from-file (song-full-path song) :no-utf8 t)
+        (setf (song-id3 song) (get-tags-for-song (song-full-path song))
               (song-matchprops song) nil
               (song-id3-p song) t)
         (incf n)
