@@ -430,7 +430,7 @@ type \"scanid3\". It may take a moment.~%"
      ;; Work around an SBCL feature(?) in embedded cores:
      #+SBCL (cffi:foreign-funcall "setenv" :string "SBCL_HOME" :string "/usr/local/lib/sbcl/" :int 0 :int)
      (asdf:oos 'asdf:load-op :swank)
-     (eval (read-from-string "(swank:create-server :port 0)")))
+     (eval (read-from-string "(swank:create-server :port 0 :coding-system \"utf-8-unix\")")))
 
     ;; Toggle file prescanning
     ((string= line "prescan")
