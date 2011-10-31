@@ -1,5 +1,5 @@
 (defpackage :shuffletron
-  (:use :common-lisp :mixalot :mixalot-mp3)
+  (:use :common-lisp :mixalot :mixalot-mp3 :mixalot-vorbis)
   (:nicknames :shuf)
   (:export #:run #:*shuffletron-version*
            #:emptyp

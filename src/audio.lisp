@@ -53,6 +53,18 @@
       (setf *playqueue* (append *playqueue* (list (song-of stream))))))
   (end-stream stream))
 
+(defun make-streamer (song)
+  "Return a streamer for the given song based on extension.
+Damn, need to refactor all this stuff one day and use generics. :("
+  (let ((absolute-path (song-full-path song)))
+    (cond ((ext-p absolute-path "mp3")
+           (make-mp3-streamer absolute-path
+                              :prescan (pref "prescan" t)
+                              :class 'mp3-jukebox-streamer
+                              :song song))
+          ((ext-p absolute-path "ogg")
+           (make-vorbis-streamer absolute-path)))))
+
 (defun play-song (song)
   "Start a song playing, overriding the existing song. Returns the new
 stream if successful, or NIL if the song could not be played."
@@ -61,10 +73,7 @@ stream if successful, or NIL if the song could not be played."
       (handler-case
           (with-stream-control ()
             (when *current-stream* (finish-stream *current-stream*))
-            (let ((new (make-mp3-streamer (song-full-path song)
-                                          :prescan (pref "prescan" t)
-                                          :class 'mp3-jukebox-streamer
-                                          :song song))
+            (let ((new (make-streamer song))
                   (start-at (song-start-time song)))
               (setf *current-stream* new)
               (mixer-add-streamer *mixer* *current-stream*)
