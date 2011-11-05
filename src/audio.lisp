@@ -63,7 +63,9 @@ Damn, need to refactor all this stuff one day and use generics. :("
                               :class 'mp3-jukebox-streamer
                               :song song))
           ((ext-p absolute-path "ogg")
-           (make-vorbis-streamer absolute-path)))))
+           (make-vorbis-streamer absolute-path))
+          ((ext-p absolute-path "flac")
+           (make-flac-streamer absolute-path)))))
 
 (defun play-song (song)
   "Start a song playing, overriding the existing song. Returns the new
