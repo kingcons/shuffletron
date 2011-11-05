@@ -110,7 +110,7 @@ type \"scanid3\". It may take a moment.~%"
     ((and *eval-support* (string= command "eval"))
      (eval* args))
 
-    ((and (eq *eval-support* 'smart) (equal (subseq line 0 1) "("))
+    ((and (eq *eval-support* 'smart) (char= (aref line 0) #\())
      (eval* line))
 
     ;; Input starting with a forward slash refines the current query.
@@ -369,7 +369,7 @@ type \"scanid3\". It may take a moment.~%"
     ;; Randomize queue
     ((string= line "shuffle")
      (with-playqueue ()
-       (setf *playqueue* (alexandria:shuffle *playqueue*))))    
+       (setf *playqueue* (alexandria:shuffle *playqueue*))))
 
     ;; Add/play in random order
     ((and (string= command "shuffle") args)
