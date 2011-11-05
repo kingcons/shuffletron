@@ -12,9 +12,10 @@
 
 (defun ext-p (filename extension)
   "Test a filename to see if it matches the given extension."
-  ;; FIXME: Why aren't we using pathname-type here?
-  (not (mismatch filename extension
-                 :test #'char-equal :start1 (- (length filename) 3))))
+  ;; KLUDGE: sadly, pathname-type barfs on various files. hack!
+  (let ((ext (and (position #\. filename :from-end t)
+                  (subseq filename (1+ (position #\. filename :from-end t))))))
+    (string-equal ext extension)))
 
 (defvar *library-progress* 0)
 
@@ -38,7 +39,8 @@
       (walk path
             (lambda (filename)
               (when (or (ext-p filename "mp3")
-                        (ext-p filename "ogg"))
+                        (ext-p filename "ogg")
+                        (ext-p filename "flac"))
                 (incf *library-progress*)
                 (when (zerop (mod *library-progress* 10))
                   (carriage-return)
@@ -65,11 +67,13 @@
                  (song-id3 song) id3)))
 
 (defun get-tags-for-song (absolute-path)
-  (let ((ext (string-downcase (pathname-type absolute-path))))
-    (cond ((string= "mp3" ext)
-           (mpg123:get-tags-from-file absolute-path :no-utf8 t))
-          ((string= "ogg" ext)
-           (vorbisfile:get-vorbis-tags-from-file absolute-path)))))
+  (cond ((ext-p absolute-path "mp3")
+         ; FIXME: Investigate :no-utf8.
+         (mpg123:get-tags-from-file absolute-path :no-utf8 t))
+        ((ext-p absolute-path "ogg")
+         (vorbisfile:get-vorbis-tags-from-file absolute-path))
+        ((ext-p absolute-path "flac")
+         (flac:get-flac-tags-from-file absolute-path))))
 
 (defun scan-id3-tags (&key verbose adjective)
   (format t "~&Scanning ID3 tags (~D).~%" (songs-needing-id3-scan))
