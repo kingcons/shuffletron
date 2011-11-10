@@ -75,7 +75,7 @@ type \"scanid3\". It may take a moment.~%"
          (samples (and seconds (* (mixer-rate *mixer*) seconds)))
          (base (if (not mode-char)
                    samples
-                   (and current (streamer-position current *mixer*))))
+                   (and current (streamer-position current))))
          (offset (cond ((eql mode-char #\+) samples)
                        ((eql mode-char #\-) (- samples))
                        (t 0)))

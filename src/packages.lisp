@@ -18,7 +18,6 @@
            #:reset-query #:refine-query #:query
            #:with-stream-control #:with-playqueue #:when-playing
            #:*mixer* #:*current-stream* #:*playqueue*
-           #:song-of #:stopped
            #:*loop-mode* #:*wakeup-time*
            #:end-stream #:finish-stream
            #:play-song #:play-songs #:add-songs #:play-next-song #:skip-song

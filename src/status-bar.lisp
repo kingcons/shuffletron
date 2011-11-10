@@ -51,7 +51,7 @@
            (output "Alarm in ~,1F hrs" (/ remaining 3600.0))))
 
         (let* ((stream *current-stream*)
-               (song (and stream (song-of stream))))
+               (song (and stream (streamer-song stream))))
           (when song
             (when need-seperator (output " | "))
             (let* ((id3 (song-id3 song))

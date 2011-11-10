@@ -8,7 +8,7 @@
 
 (defvar *term-rows* 80)
 (defvar *term-cols* 25)
- 
+
 (defun get-terminal-size ()
   #-linux (values 80 25)                ; =)
   #+linux
@@ -248,12 +248,12 @@ pairs as cons cells."
 
 (defun show-current-song (&optional delimit)
   (let* ((current *current-stream*)
-         (song (and current (song-of current)))
+         (song (and current (streamer-song current)))
          (start-time (and song (song-start-time song))))
     (when current
       (when delimit (terpri))
-      (let ((pos (streamer-position current *mixer*))
-            (len (streamer-length   current *mixer*)))
+      (let ((pos (streamer-position current))
+            (len (streamer-length current)))
         ;; It's possible these can be NIL if we're racing against the startup
         ;; of a stream with an error
         (when (and pos len)

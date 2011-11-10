@@ -2,10 +2,6 @@
 
 (defvar *mixer* nil)
 
-(defclass mp3-jukebox-streamer (mp3-streamer)
-  ((song :accessor song-of :initarg :song)
-   (stopped :accessor stopped :initform nil)))
-
 (defun audio-init ()
   (setf *mixer* (create-mixer :rate 44100)))
 
@@ -42,7 +38,7 @@
 
 (defun end-stream (stream)
   ;; TODO: Fade out nicely.
-  (setf (stopped stream) t)
+  (setf (streamer-stopped stream) t)
   (mixer-remove-streamer *mixer* stream)
   (setf *current-stream* nil)
   (update-status-bar))
@@ -50,7 +46,7 @@
 (defun finish-stream (stream)
   (when *loop-mode*
     (with-playqueue ()
-      (setf *playqueue* (append *playqueue* (list (song-of stream))))))
+      (setf *playqueue* (append *playqueue* (list (streamer-song stream))))))
   (end-stream stream))
 
 (defun make-streamer (song)
@@ -59,13 +55,11 @@ Damn, need to refactor all this stuff one day and use generics. :("
   (let ((absolute-path (song-full-path song)))
     (cond ((ext-p absolute-path "mp3")
            (make-mp3-streamer absolute-path
-                              :prescan (pref "prescan" t)
-                              :class 'mp3-jukebox-streamer
-                              :song song))
+                              :prescan (pref "prescan" t) :song song))
           ((ext-p absolute-path "ogg")
-           (make-vorbis-streamer absolute-path))
+           (make-vorbis-streamer absolute-path :song song))
           ((ext-p absolute-path "flac")
-           (make-flac-streamer absolute-path)))))
+           (make-flac-streamer absolute-path :song song)))))
 
 (defun play-song (song)
   "Start a song playing, overriding the existing song. Returns the new
@@ -128,19 +122,19 @@ stream if successful, or NIL if the song could not be played."
       (t (with-stream-control ()
            (when *current-stream* (finish-stream *current-stream*)))))))
 
-(defmethod streamer-cleanup ((stream mp3-jukebox-streamer) mixer)
+(defmethod streamer-cleanup ((stream streamer) mixer)
   (declare (ignore mixer))
   (call-next-method)
   ;; The STOPPED flag distinguishes whether playback was interrupted
   ;; by the user, versus having reached the end of the song. If we're
   ;; supposed to loop, this determines who is responsible for making
   ;; that happen.
-  (when (and *loop-mode* (not (stopped stream)))
+  (when (and *loop-mode* (not (streamer-stopped stream)))
     (with-playqueue ()
-      (setf *playqueue* (append *playqueue* (list (song-of stream))))))
+      (setf *playqueue* (append *playqueue* (list (streamer-song stream))))))
   ;; If stopped is set, someone else can be expected to start up the
   ;; next song. Otherwise, we have to do it ourselves.
-  (unless (stopped stream)
+  (unless (streamer-stopped stream)
     ;; If the song completed:
     (with-stream-control ()
       (when (eq stream *current-stream*)
@@ -166,7 +160,7 @@ stream if successful, or NIL if the song could not be played."
         t))))
 
 (defun current-song-playing ()
-  (when-playing (stream) (song-of stream)))
+  (when-playing (stream) (streamer-song stream)))
 
 (defun playqueue-and-current ()
   (let ((song (current-song-playing)))
@@ -198,7 +192,7 @@ stream if successful, or NIL if the song could not be played."
       (when *current-stream*
         ;; Put a stopped song on the head of the queue, so that a
         ;; subsequent 'play' will start it from the beginning.
-        (push (song-of *current-stream*) *playqueue*)
+        (push (streamer-song *current-stream*) *playqueue*)
         (end-stream *current-stream*)))))
 
 (defun play-command ()

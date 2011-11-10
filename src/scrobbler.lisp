@@ -5,8 +5,7 @@
   (setf cl-scrobbler:*config-dir* (directory-namestring path)))
 
 (defun song-position ()
-  (round (or (streamer-position *current-stream* *mixer*) 0)
-         (mixer-rate *mixer*)))
+  (round (or (streamer-position *current-stream*) 0) (mixer-rate *mixer*)))
 
 (defun song-metadata ()
   (when (current-song-playing)
@@ -14,8 +13,7 @@
       ;; Use (pathname-name (song-local-path (current-song-playing))) instead?
       (list (or (getf id3 :title) "Unknown Song")
             (or (getf id3 :artist) "Unknown Artist")
-            (round (streamer-length *current-stream* *mixer*)
-                   (mixer-rate *mixer*))))))
+            (round (streamer-length *current-stream*) (mixer-rate *mixer*))))))
 
 ;;; Raw, unrepentant glue.
 (setf cl-scrobbler:*song-info-fn* #'song-metadata

@@ -38,11 +38,11 @@
                (:td (format t "~A of ~A"
                             (time->string
                              (round
-                              (mixalot:streamer-position streamer *mixer*)
+                              (mixalot:streamer-position streamer)
                               (mixalot:mixer-rate *mixer*)))
                             (time->string
                              (round
-                              (mixalot:streamer-length streamer *mixer*)
+                              (mixalot:streamer-length streamer)
                               (mixalot:mixer-rate *mixer*))))))
           (when start-time
             (htm
@@ -154,7 +154,7 @@
 (define-easy-handler (page/now :uri "/now")
     ()
   (let* ((current *current-stream*)
-         (song (and current (song-of current))))
+         (song (and current (streamer-song current))))
     (with-html ("Shuffletron" :refresh t)
       (cond
         (song
@@ -166,7 +166,7 @@
   ()
   (let* ((current *current-stream*)
          ;;(queue-size (with-playqueue () (length *playqueue*)))
-         (song (and current (song-of current)))
+         (song (and current (streamer-song current)))
          (id3 (and song (song-id3 song))))
     (with-html ("Shuffletron Status" :refresh t)
       (cond
