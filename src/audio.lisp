@@ -124,7 +124,6 @@ stream if successful, or NIL if the song could not be played."
 
 (defmethod streamer-cleanup ((stream streamer) mixer)
   (declare (ignore mixer))
-  (call-next-method)
   ;; The STOPPED flag distinguishes whether playback was interrupted
   ;; by the user, versus having reached the end of the song. If we're
   ;; supposed to loop, this determines who is responsible for making

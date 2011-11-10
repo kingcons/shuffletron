@@ -46,5 +46,4 @@ Bugs:
 * Search markings (underlining) not getting cleared, also wrong after navigating history
 
 Other:
-* Vorbis support?
 * Volume support? (Note: This is mostly a mixalot TODO)
