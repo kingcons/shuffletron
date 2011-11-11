@@ -17,4 +17,4 @@ You could git clone this library and make sure it's path on your computer is on 
  * The original author, ahefner's, shuffletron homepage is [here](http://vintage-digital.com/hefner/software/shuffletron/).
 
 ## More?
-That's pretty much it. Once it's installed just give it the path to your files, start it and use it. Let us know what features you'd like to see or hack them yourself. It's a pretty pleasant interactive environment. For an example of me fixing a bug with stream cleanup and song queues while the player ran see http://redlinernotes.com/best_debugging_experience_evar.txt
+That's pretty much it. Once it's installed just give it the path to your files, start it and use it. Let us know what features you'd like to see or hack them yourself. It's a pretty pleasant interactive environment. For an example of me fixing a bug with stream cleanup and song queues while the player ran see http://redlinernotes.com/docs/best_debugging_experience_evar.txt
