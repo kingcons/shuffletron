@@ -56,8 +56,10 @@ Damn, need to refactor all this stuff one day and use generics. :("
     (cond ((ext-p absolute-path "mp3")
            (make-mp3-streamer absolute-path
                               :prescan (pref "prescan" t) :song song))
+          #+linux
           ((ext-p absolute-path "ogg")
            (make-vorbis-streamer absolute-path :song song))
+          #+linux
           ((ext-p absolute-path "flac")
            (make-flac-streamer absolute-path :song song)))))
 

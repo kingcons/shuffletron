@@ -1,6 +1,7 @@
 (defpackage :shuffletron
-  (:use :common-lisp :mixalot
-        :mixalot-mp3 :mixalot-vorbis :mixalot-flac)
+  (:use :common-lisp :mixalot :mixalot-mp3
+   #+linux :mixalot-vorbis
+   #+linux :mixalot-flac)
   (:nicknames :shuf)
   (:export #:run #:*shuffletron-version*
            #:emptyp

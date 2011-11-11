@@ -39,8 +39,8 @@
       (walk path
             (lambda (filename)
               (when (or (ext-p filename "mp3")
-                        (ext-p filename "ogg")
-                        (ext-p filename "flac"))
+                        #+linux (ext-p filename "ogg")
+                        #+linux (ext-p filename "flac"))
                 (incf *library-progress*)
                 (when (zerop (mod *library-progress* 10))
                   (carriage-return)
@@ -70,8 +70,10 @@
   (cond ((ext-p absolute-path "mp3")
          ; FIXME: Investigate :no-utf8.
          (mpg123:get-tags-from-file absolute-path :no-utf8 t))
+        #+linux
         ((ext-p absolute-path "ogg")
          (vorbisfile:get-vorbis-tags-from-file absolute-path))
+        #+linux
         ((ext-p absolute-path "flac")
          (flac:get-flac-tags-from-file absolute-path))))
 
