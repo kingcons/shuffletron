@@ -4,6 +4,14 @@
   "Whether Lisp evaluation from the Shuffletron prompt is allowed.
   May be NIL, T or 'SMART.")
 
+(defun generate-completions ()
+  ;; TODO: Also complete commands.
+  (let ((results nil))
+    (loop for song across *library* do
+      (when (song-id3 song)
+        (pushnew (getf (song-id3 song) :artist) results :test #'string=)
+        (pushnew (getf (song-id3 song) :album) results :test #'string=)))
+    (nconc results (list-playlists))))
 
 (defun init ()
   (setf *package* (find-package :shuffletron))
@@ -29,6 +37,7 @@
   (load-id3-cache)
   (load-playlists)
   (reset-query)
+  (setf (pref "completions") (generate-completions))
   ;; Scan tags of new files automatically, unless there's a ton of them.
   (let ((need (songs-needing-id3-scan)))
     (cond
