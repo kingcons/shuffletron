@@ -35,3 +35,8 @@
            #:time->string #:utime->string #:parse-relative-time
            #:parse-alarm-args
            #:parse-and-execute))
+
+(defpackage :shuffletron-commands
+  (:use :common-lisp)
+  (:export #:defcommand
+           #:*commands*))

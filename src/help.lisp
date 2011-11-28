@@ -108,74 +108,9 @@ Additional help topics:
 "))
 
 (defun print-commands ()
-  (format t "
-Command list:
-
-  /[query]       Search library for [query].
-  show           Print search matches, highlighting songs in queue.
-  back           Undo last search.
-  [songs]        Play list of songs.
-  all            Play all songs in selection (equivalent to \"0-\")
-  +[songs]       Append list of songs to queue.
-  pre[songs]     Prepend list of songs to queue.
-  random         Play a random song from the current selection.
-  random QUERY   Play a random song matching QUERY
-  shuffle SONGS  Play songs in random order.
-
-  queue          Print queue contents and current song playing.
-  queue names    List any existing playlists.
-  queue show X   Print the numbered tracklist of X.
-  queue load X   Load the playlist (X) if it exists or the absolute M3U path X.
-  queue save X   Save the queue under the given name (X), overwriting if needed.
-                 Also exports an M3U of the queue to ~/.shuffletron/playlists/.
-  queue del X    Delete the playlist X.
-  queue stash    Stash the playqueue, overwriting any former stash.
-  queue unstash  Restore the playqueue from stash, losing unsaved playlists.
-  shuffle        Randomize order of songs in queue.
-  clear          Clear the queue (current song continues playing)
-  loop           Toggle loop mode (loop through songs in queue)
-  qdrop          Remove last song from queue
-  qdrop RANGES   Remove songs from queue
-  qtag TAGS      Apply tags to all songs in queue
-  fromqueue      Transfer queue to selection
-  toqueue        Replace queue with selection
-
-  now            Print name of song currently playing.
-  play           Resume playing
-  stop           Stop playing (current song pushed to head of queue)
-  pause          Toggle paused/unpaused.
-  skip           Skip currently playing song. If looping is enabled, this
-                 song won't played again.
-  next           Advance to next song. If looping is enabled, the current
-                 song will be enqueued. 
-  repeat N       Add N repetitions of currently playing song to head of queue.
-  seek TIME      Seek to time (in [h:]m:ss format, or a number in seconds)
-  seek +TIME     Seek forward
-  seek -TIME     Seek backward
-  startat TIME   Always start playback at a given time (to skip long intros)
-
-  tag            List tags of currently playing song.
-  tag TAGS       Add one or more textual tags to the current song.
-  untag TAGS     Remove the given tags from the currently playing song.
-  tagged TAGS    Search for files having any of specified tags.
-  tags           List all tags (and # occurrences) within current query.
-  killtag TAGS   Remove all occurances of the given tags
-  tagall TAGS    Apply tags to all selected songs
-  untagall TAGS  Remove given tags from all selected songs
-
-  time           Print current time
-  alarm          Set alarm (see \"help alarms\")
-
-  scrobble toggle      Toggle queueing of songs for scrobbling to last.fm.
-  scrobble nowplaying  Toggle updating the nowplaying status on last.fm.
-  scrobble queue       Show the current songs queued for scrobbling.
-
-  scanid3        Scan new files for ID3 tags
-  prescan        Toggle file prescanning (useful if file IO is slow)
-  exit           Exit the program.
-
-  help [topic]   Help
-"))
+  (format t "~Command list:~%~%")
+  (loop for (pred . sym) in shuffletron-commands:*commands*
+        do (format t "  ~20A   ~A~%" sym (get sym :help))))
 
 (defun print-examples ()
   (format t "
