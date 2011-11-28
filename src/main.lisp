@@ -14,10 +14,11 @@
     (nconc results (list-playlists))))
 
 (defun init ()
-  (setf *package* (find-package :shuffletron))
   (parse-command-line-args)
   (format t "~&This is Shuffletron ~A~%" *shuffletron-version*)
   (setf *random-state* (make-random-state t))
+  (when (probe-file (prefpath "shuffletronrc"))
+    (load (prefpath "shuffletronrc")))
   (loop do
         (init-library)
         (unless *library-base*
